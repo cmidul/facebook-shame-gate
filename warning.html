@@ -2,27 +2,305 @@
 <html>
 <head>
   <title>Warning</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      background: black;
-      color: white;
+      background: #000;
+      color: #fff;
       height: 100vh;
+      overflow: hidden;
+      font-family: 'Space Mono', monospace;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size: 28px;
-      text-align: center;
-      cursor: pointer;
-      font-family: sans-serif;
+      position: relative;
     }
-    #timer { font-size: 18px; margin-top: 20px; color: #aaa; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    .border-flash {
+      position: fixed;
+      inset: 0;
+      border: 3px solid #ff0000;
+      pointer-events: none;
+      z-index: 200;
+      animation: borderPulse 1s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes borderPulse {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.8; }
+    }
+
+    .noise {
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      animation: noiseShift 0.1s steps(1) infinite;
+      opacity: 0.3;
+    }
+
+    @keyframes noiseShift {
+      0%   { transform: translate(0, 0); }
+      10%  { transform: translate(-2%, -3%); }
+      20%  { transform: translate(3%, 1%); }
+      30%  { transform: translate(-1%, 4%); }
+      40%  { transform: translate(4%, -2%); }
+      50%  { transform: translate(-3%, 2%); }
+      60%  { transform: translate(1%, -4%); }
+      70%  { transform: translate(-4%, 3%); }
+      80%  { transform: translate(2%, -1%); }
+      90%  { transform: translate(-2%, 4%); }
+      100% { transform: translate(3%, -3%); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      max-width: 860px;
+      width: 100%;
+      animation: containerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes containerIn {
+      from { opacity: 0; transform: scale(1.1) translateY(-20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .skull {
+      font-size: 70px;
+      display: block;
+      margin-bottom: 0.8rem;
+      animation: skullPulse 1.5s ease-in-out infinite, skullIn 0.5s ease both;
+      filter: drop-shadow(0 0 20px rgba(255,0,0,0.6));
+      line-height: 1;
+    }
+
+    @keyframes skullIn {
+      from { transform: scale(0) rotate(-20deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes skullPulse {
+      0%, 100% { transform: scale(1) rotate(-2deg); }
+      50%       { transform: scale(1.08) rotate(2deg); }
+    }
+
+    .main-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(26px, 4.5vw, 48px);
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255,50,50,0.8), 0 0 60px rgba(255,0,0,0.4);
+      animation: glitchText 4s infinite, textIn 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+      margin-bottom: 0.4rem;
+    }
+
+    @keyframes textIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glitchText {
+      0%, 90%, 100% { text-shadow: 0 0 20px rgba(255,50,50,0.8), 0 0 60px rgba(255,0,0,0.4); transform: translate(0); }
+      91% { text-shadow: -3px 0 #ff0080, 3px 0 #00ffff; transform: translate(-2px, 0); }
+      92% { text-shadow: 3px 0 #ff0080, -3px 0 #00ffff; transform: translate(2px, 0); }
+      93% { text-shadow: 0 0 20px rgba(255,50,50,0.8), 0 0 60px rgba(255,0,0,0.4); transform: translate(0); }
+      96% { text-shadow: -2px 0 #ff0080, 2px 0 #00ffff; transform: translate(1px, 1px); }
+      97% { text-shadow: 0 0 20px rgba(255,50,50,0.8), 0 0 60px rgba(255,0,0,0.4); transform: translate(0); }
+    }
+
+    .highlight { color: #ff3333; display: inline-block; }
+
+    .subtitle {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      animation: textIn 0.8s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .divider {
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ff3333, transparent);
+      margin: 0.8rem auto 1.6rem;
+      animation: dividerPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes dividerPulse {
+      0%, 100% { opacity: 0.5; width: 120px; }
+      50%       { opacity: 1; width: 200px; }
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 0.5rem;
+      animation: textIn 0.8s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .option-btn {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      padding: 1.1rem 1rem;
+      cursor: pointer;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .option-btn:active { transform: scale(0.97); }
+
+    .option-btn .icon {
+      font-size: 26px;
+      display: block;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    .option-btn .label {
+      font-size: 13px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    .option-btn .desc {
+      font-size: 10px;
+      color: #555;
+      letter-spacing: 0.08em;
+    }
+
+    /* Color accents per button */
+    .btn-cf  { border-color: rgba(255, 80, 80, 0.3); }
+    .btn-cf:hover  { border-color: rgba(255, 80, 80, 0.7); box-shadow: 0 0 20px rgba(255,80,80,0.15); }
+    .btn-cf .label { color: #ff5050; }
+
+    .btn-lc  { border-color: rgba(255, 160, 30, 0.3); }
+    .btn-lc:hover  { border-color: rgba(255, 160, 30, 0.7); box-shadow: 0 0 20px rgba(255,160,30,0.15); }
+    .btn-lc .label { color: #ffa01e; }
+
+    .btn-art { border-color: rgba(80, 200, 180, 0.3); }
+    .btn-art:hover { border-color: rgba(80, 200, 180, 0.7); box-shadow: 0 0 20px rgba(80,200,180,0.15); }
+    .btn-art .label { color: #50c8b4; }
+
+    .btn-fb  { border-color: rgba(100, 100, 100, 0.3); }
+    .btn-fb:hover  { border-color: rgba(100, 100, 100, 0.6); box-shadow: 0 0 20px rgba(100,100,100,0.1); }
+    .btn-fb .label { color: #666; }
+    .btn-fb .desc  { color: #333; }
+
+    /* Shine sweep on hover */
+    .option-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      transition: left 0.4s ease;
+    }
+
+    .option-btn:hover::after { left: 150%; }
+
+    .flash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.1s ease;
+    }
+
+    .flash-overlay.active { opacity: 1; }
   </style>
 </head>
 <body>
-  <div>YOU FU*KING LOSER, DO YOUR WORK<br></div>
-  <div id="timer">Start wasting your fu*king time in 10 ...</div>
+  <div class="border-flash"></div>
+  <div class="noise"></div>
+  <div class="flash-overlay" id="flash"></div>
+
+  <div class="container">
+    <span class="skull">💀</span>
+    <div class="main-text">
+      YOU FU*KING LOSER,<br>
+      LAPTOP TA KI <span class="highlight">FB CHALAITE</span> KINSILI?
+    </div>
+    <div class="divider"></div>
+    <div class="subtitle">choose wisely or waste your life</div>
+
+    <div class="options">
+      <button class="option-btn btn-cf" id="btn-cf">
+        <span class="icon">⚔️</span>
+        <span class="label">Codeforces</span>
+        <span class="desc">Go solve a problem, loser</span>
+      </button>
+
+      <button class="option-btn btn-lc" id="btn-lc">
+        <span class="icon">🧠</span>
+        <span class="label">LeetCode</span>
+        <span class="desc">Your DSA is embarrassing</span>
+      </button>
+
+      <button class="option-btn btn-art" id="btn-art">
+        <span class="icon">📡</span>
+        <span class="label">Random Tech Article</span>
+        <span class="desc">Learn something for once</span>
+      </button>
+
+      <button class="option-btn btn-fb" id="btn-fb">
+        <span class="icon">🪦</span>
+        <span class="label">Facebook</span>
+        <span class="desc">Fine. Go rot. Your choice.</span>
+      </button>
+    </div>
+  </div>
 
   <script src="warning.js"></script>
 </body>
