@@ -13,3 +13,8 @@ giving you 10 seconds to reconsider. Click to skip or just wait it out.
 
 ## Notes
 > Built with the help of AI (vibe coded) — but it works! 🚀
+
+
+AI use korle shera!!!
+CTRL+C
+CTRL+V
